@@ -52,8 +52,8 @@ def customizations(record):
 
     # record = bp.customization.convert_to_unicode(record) # transform \& into & ones, messing-up latex
     record = bp.customization.type(record)
-    record = bp.customization.author(record)
-    record = bp.customization.editor(record)
+    # record = bp.customization.author(record)
+    # record = bp.customization.editor(record)
     record = bp.customization.keyword(record)
     record = bp.customization.page_double_hyphen(record)
 
@@ -108,15 +108,15 @@ class EnDecoder(object):
         entry[BP_ENTRYTYPE_KEY] = entry.pop(TYPE_KEY)
         for f in ignore_fields:
             entry.pop(f, None)
-        if 'author' in entry:
-            entry['author'] = ' and '.join(
-                author for author in entry['author'])
-        if 'editor' in entry:
-            entry['editor'] = ' and '.join(
-                editor for editor in entry['editor'])
-        if 'keyword' in entry:
-            entry['keyword'] = ', '.join(
-                keyword for keyword in entry['keyword'])
+        # if 'author' in entry:
+        #     entry['author'] = ' and '.join(
+        #         author for author in entry['author'])
+        # if 'editor' in entry:
+        #     entry['editor'] = ' and '.join(
+        #         editor for editor in entry['editor'])
+        # if 'keyword' in entry:
+        #     entry['keyword'] = ', '.join(
+        #         keyword for keyword in entry['keyword'])
         return entry
 
     def decode_bibdata(self, bibstr):
@@ -129,7 +129,7 @@ class EnDecoder(object):
             raise self.BibDecodingError(error_msg, bibstr)
         try:
             entries = bp.bparser.BibTexParser(
-                bibstr, common_strings=True, customization=customizations,
+                bibstr, common_strings=True, #customization=customizations,
                 homogenize_fields=True, ignore_nonstandard_types=False).get_entry_dict()
             # Remove id from bibtexparser attribute which is stored as citekey
             for e in entries:
@@ -139,10 +139,10 @@ class EnDecoder(object):
                 entries[e][TYPE_KEY] = t
                 # Temporary fix to #188 (to be fully fixed when the upstream
                 # issue: sciunto-org/python-bibtexparser/#229 is fixed too)
-                if 'editor' in entries[e]:
-                    entries[e]['editor'] = [
-                        editor['name'] if isinstance(editor, dict) else editor
-                        for editor in entries[e]['editor']]
+                # if 'editor' in entries[e]:
+                #     entries[e]['editor'] = [
+                #         editor['name'] if isinstance(editor, dict) else editor
+                #         for editor in entries[e]['editor']]
             if len(entries) > 0:
                 return entries
             else:
